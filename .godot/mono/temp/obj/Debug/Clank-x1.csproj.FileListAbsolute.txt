@@ -1,0 +1,17 @@
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.csproj.AssemblyReference.cache
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.AssemblyInfoInputs.cache
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.AssemblyInfo.cs
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.csproj.CoreCompileInputs.cache
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\Clank-x1.deps.json
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\Clank-x1.runtimeconfig.json
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\Clank-x1.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\Clank-x1.pdb
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\GodotSharp.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\bin\Debug\GodotSharpEditor.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.csproj.Up2Date
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\refint\Clank-x1.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.pdb
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.genruntimeconfig.cache
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\ref\Clank-x1.dll

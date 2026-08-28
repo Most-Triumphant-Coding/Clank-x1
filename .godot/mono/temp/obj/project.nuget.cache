@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "HlwdIVHRAYI=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\decla\\Documents\\coding\\Clank-x1\\Clank-x1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\decla\\.nuget\\packages\\godot.sourcegenerators\\4.6.3\\godot.sourcegenerators.4.6.3.nupkg.sha512",
+    "C:\\Users\\decla\\.nuget\\packages\\godotsharp\\4.6.3\\godotsharp.4.6.3.nupkg.sha512",
+    "C:\\Users\\decla\\.nuget\\packages\\godotsharpeditor\\4.6.3\\godotsharpeditor.4.6.3.nupkg.sha512"
+  ],
+  "logs": []
+}

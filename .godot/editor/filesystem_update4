@@ -1,0 +1,6 @@
+res://scripts/UI/HudController.cs
+res://scripts/Combat/CombatLoadoutController.cs
+res://scripts/Player/PlayerHoverBikeController.cs
+res://scripts/Core/GameRoot.cs
+res://scripts/AI/AIDummyController.cs
+res://scripts/WorldController.cs
