@@ -4,6 +4,8 @@ public partial class PlayerHoverBikeController : Node3D
 {
     private const string FirePrimaryAction = "fire_primary";
     private const string FireMissileAction = "fire_missile";
+    private const float LaserSpawnForwardOffset = 1.35f;
+    private const float LaserSpawnHeightOffset = 0.2f;
 
     [Export]
     public float HoverHeightMeters { get; set; } = 1.8f;
@@ -24,13 +26,13 @@ public partial class PlayerHoverBikeController : Node3D
     public float MaxHealth { get; set; } = 200.0f;
 
     [Export]
-    public float ThirdPersonCameraHeight { get; set; } = 3.0f;
+    public float ThirdPersonCameraHeight { get; set; } = 1.0f;
 
     [Export]
-    public float ThirdPersonCameraDistance { get; set; } = 16.0f;
+    public float ThirdPersonCameraDistance { get; set; } = 5.0f;
 
     [Export]
-    public float ThirdPersonCameraPitchDegrees { get; set; } = -12.0f;
+    public float ThirdPersonCameraPitchDegrees { get; set; } = -10.0f;
 
     [Signal]
     public delegate void PlayerDestroyedEventHandler();
@@ -165,13 +167,31 @@ public partial class PlayerHoverBikeController : Node3D
     {
         if (Input.IsActionJustPressed(FirePrimaryAction))
         {
-            _combat.TryFirePrimary();
+            if (_combat.TryFirePrimary())
+            {
+                SpawnPrimaryLaser();
+            }
         }
 
         if (Input.IsActionJustPressed(FireMissileAction))
         {
             _combat.TryFireMissile();
         }
+    }
+
+    private void SpawnPrimaryLaser()
+    {
+        Node? currentScene = GetTree().CurrentScene;
+        if (currentScene == null)
+        {
+            return;
+        }
+
+        var laser = new LaserShot();
+        Vector3 forward = -GlobalTransform.Basis.Z;
+        laser.GlobalPosition = GlobalPosition + (forward * LaserSpawnForwardOffset) + (Vector3.Up * LaserSpawnHeightOffset);
+        laser.Direction = forward;
+        currentScene.AddChild(laser);
     }
 
     public void ApplyDamage(float rawDamage)

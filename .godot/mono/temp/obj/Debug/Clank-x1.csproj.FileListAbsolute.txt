@@ -15,3 +15,4 @@ C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\refint\Clank
 C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.pdb
 C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.genruntimeconfig.cache
 C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\ref\Clank-x1.dll
+C:\Users\decla\Documents\coding\Clank-x1\.godot\mono\temp\obj\Debug\Clank-x1.sourcelink.json

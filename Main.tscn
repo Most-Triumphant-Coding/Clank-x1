@@ -1,47 +1,19 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene format=3 uid="uid://bf82rcrx2gqlt"]
 
-[ext_resource type="Script" path="res://scripts/Core/GameRoot.cs" id="1_c2rtm"]
-[ext_resource type="Script" path="res://scripts/Player/PlayerHoverBikeController.cs" id="2_hv2s7"]
-[ext_resource type="Script" path="res://scripts/Combat/CombatLoadoutController.cs" id="3_7f1n0"]
-[ext_resource type="Script" path="res://scripts/UI/HudController.cs" id="4_1qga1"]
+[ext_resource type="Script" uid="uid://c3cx1ckmfpiug" path="res://scripts/Core/GameRoot.cs" id="1_c2rtm"]
+[ext_resource type="Script" uid="uid://c8tc43ouar4hf" path="res://scripts/Player/PlayerHoverBikeController.cs" id="2_hv2s7"]
+[ext_resource type="Script" uid="uid://b47bxlxufh142" path="res://scripts/Combat/CombatLoadoutController.cs" id="3_7f1n0"]
+[ext_resource type="Script" uid="uid://kq3b3de516tl" path="res://scripts/UI/HudController.cs" id="4_1qga1"]
 
-[sub_resource type="Environment" id="Environment_h2m14"]
-background_mode = 1
-background_color = Color(0.35, 0.65, 1, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_outer"]
-radius = 400.0
-height = 800.0
-radial_segments = 64
-rings = 32
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_outer"]
-albedo_color = Color(0.85, 0.85, 0.85, 1)
-cull_mode = 2
-
-[sub_resource type="SphereMesh" id="SphereMesh_inner"]
-radius = 100.0
-height = 200.0
-radial_segments = 64
-rings = 32
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_inner"]
-albedo_color = Color(0.823529, 0.705882, 0.54902, 1)
-
-[sub_resource type="BoxMesh" id="SphereMesh_head"]
-size = Vector3(1.2, 0.45, 2.2)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
-albedo_color = Color(0.22, 0.22, 0.22, 1)
-metallic = 0.0
-roughness = 0.9
-cull_mode = 0
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.27, 0.55, 0.23, 1)
+roughness = 0.95
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
 size = Vector2(900, 900)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
-albedo_color = Color(0.27, 0.55, 0.23, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocks"]
+albedo_color = Color(0.5, 0.5, 0.5, 1)
 roughness = 0.95
 
 [sub_resource type="SphereMesh" id="SphereMesh_rocks"]
@@ -50,126 +22,120 @@ height = 0.7
 radial_segments = 10
 rings = 8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rocks"]
-albedo_color = Color(0.5, 0.5, 0.5, 1)
-roughness = 0.95
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
+albedo_color = Color(0.22, 0.22, 0.22, 1)
+roughness = 0.9
 
-[node name="GameRoot" type="Node3D"]
+[sub_resource type="BoxMesh" id="SphereMesh_head"]
+size = Vector3(1.2, 0.45, 2.2)
+
+[sub_resource type="Environment" id="Environment_h2m14"]
+background_mode = 1
+background_color = Color(0.35, 0.65, 1, 1)
+
+[node name="GameRoot" type="Node3D" unique_id=834876221]
 script = ExtResource("1_c2rtm")
 
-[node name="World" type="Node3D" parent="."]
+[node name="World" type="Node3D" parent="." unique_id=1512155589]
 
-[node name="GroundPlane" type="MeshInstance3D" parent="World"]
-mesh = SubResource("PlaneMesh_ground")
+[node name="GroundPlane" type="MeshInstance3D" parent="World" unique_id=431807030]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013142049, 0.03724885, -0.0160079)
 material_override = SubResource("StandardMaterial3D_ground")
+mesh = SubResource("PlaneMesh_ground")
 
-[node name="GroundRocksFallback" type="Node3D" parent="World"]
+[node name="GroundRocksFallback" type="Node3D" parent="World" unique_id=392691364]
 
-[node name="Rock1" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-18, 0.2, -22)
-scale = Vector3(1.1, 1.0, 0.9)
-mesh = SubResource("SphereMesh_rocks")
+[node name="Rock1" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=1934155408]
+transform = Transform3D(1.1, 0, 0, 0, 1, 0, 0, 0, 0.9, -18, 0.2, -22)
 material_override = SubResource("StandardMaterial3D_rocks")
-
-[node name="Rock2" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(24, 0.2, -30)
-scale = Vector3(0.9, 1.2, 1.0)
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock3" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(36, 0.2, 14)
-scale = Vector3(1.3, 0.8, 1.1)
+[node name="Rock2" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=1919890273]
+transform = Transform3D(0.9, 0, 0, 0, 1.2, 0, 0, 0, 1, 24, 0.2, -30)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock4" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-42, 0.2, 12)
-scale = Vector3(0.85, 1.1, 0.95)
+[node name="Rock3" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=1043127511]
+transform = Transform3D(1.3, 0, 0, 0, 0.8, 0, 0, 0, 1.1, 36, 0.2, 14)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock5" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(12, 0.2, 42)
-scale = Vector3(1.0, 0.9, 1.4)
+[node name="Rock4" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=786015205]
+transform = Transform3D(0.85, 0, 0, 0, 1.1, 0, 0, 0, 0.95, -42, 0.2, 12)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock6" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-8, 0.2, -46)
-scale = Vector3(1.2, 0.75, 1.05)
+[node name="Rock5" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=745658802]
+transform = Transform3D(1, 0, 0, 0, 0.9, 0, 0, 0, 1.4, 12, 0.2, 42)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock7" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(58, 0.2, -8)
-scale = Vector3(1.05, 1.05, 0.85)
+[node name="Rock6" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=543986231]
+transform = Transform3D(1.2, 0, 0, 0, 0.75, 0, 0, 0, 1.05, -8, 0.2, -46)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock8" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-62, 0.2, -4)
-scale = Vector3(0.95, 1.25, 1.1)
+[node name="Rock7" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=96856002]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 0.85, 58, 0.2, -8)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock9" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(5, 0.2, -68)
-scale = Vector3(1.4, 0.7, 1.2)
+[node name="Rock8" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=826776446]
+transform = Transform3D(0.95, 0, 0, 0, 1.25, 0, 0, 0, 1.1, -62, 0.2, -4)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock10" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-28, 0.2, 64)
-scale = Vector3(0.88, 1.15, 0.92)
+[node name="Rock9" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=1333596471]
+transform = Transform3D(1.4, 0, 0, 0, 0.7, 0, 0, 0, 1.2, 5, 0.2, -68)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock11" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(74, 0.2, 32)
-scale = Vector3(1.25, 0.85, 1.0)
+[node name="Rock10" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=1140937118]
+transform = Transform3D(0.88, 0, 0, 0, 1.15, 0, 0, 0, 0.92, -28, 0.2, 64)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Rock12" type="MeshInstance3D" parent="World/GroundRocksFallback"]
-position = Vector3(-76, 0.2, -36)
-scale = Vector3(1.1, 1.05, 1.3)
+[node name="Rock11" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=891793937]
+transform = Transform3D(1.25, 0, 0, 0, 0.85, 0, 0, 0, 1, 74, 0.2, 32)
+material_override = SubResource("StandardMaterial3D_rocks")
 mesh = SubResource("SphereMesh_rocks")
-material_override = SubResource("StandardMaterial3D_rocks")
 
-[node name="Player1" type="Node3D" parent="World"]
-position = Vector3(0, 1.8, 0)
+[node name="Rock12" type="MeshInstance3D" parent="World/GroundRocksFallback" unique_id=130625875]
+transform = Transform3D(1.1, 0, 0, 0, 1.05, 0, 0, 0, 1.3, -76, 0.2, -36)
+material_override = SubResource("StandardMaterial3D_rocks")
+mesh = SubResource("SphereMesh_rocks")
+
+[node name="Player1" type="Node3D" parent="World" unique_id=1124456899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 script = ExtResource("2_hv2s7")
 
-[node name="HeadPivot" type="Node3D" parent="World/Player1"]
+[node name="HeadPivot" type="Node3D" parent="World/Player1" unique_id=1303452418]
 
-[node name="Camera3D" type="Camera3D" parent="World/Player1/HeadPivot"]
-position = Vector3(0, 3, 16)
-rotation = Vector3(-0.20944, 0, 0)
+[node name="Camera3D" type="Camera3D" parent="World/Player1/HeadPivot" unique_id=716652631]
+transform = Transform3D(1, 0, 0, 0, 0.9781475, 0.20791216, 0, -0.20791216, 0.9781475, 0, 3, 16)
 current = true
 
-[node name="HeadMesh" type="MeshInstance3D" parent="World/Player1/HeadPivot"]
-position = Vector3(0, -0.2, 0)
-mesh = SubResource("SphereMesh_head")
+[node name="HeadMesh" type="MeshInstance3D" parent="World/Player1/HeadPivot" unique_id=1826436482]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 material_override = SubResource("StandardMaterial3D_head")
+mesh = SubResource("SphereMesh_head")
 
-[node name="Combat" type="Node" parent="World/Player1"]
+[node name="Combat" type="Node" parent="World/Player1" unique_id=426211478]
 script = ExtResource("3_7f1n0")
 
-[node name="HUD" type="CanvasLayer" parent="."]
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1778590242]
 script = ExtResource("4_1qga1")
 
-[node name="DebugLabel" type="Label" parent="HUD"]
+[node name="DebugLabel" type="Label" parent="HUD" unique_id=940728799]
 offset_left = 12.0
 offset_top = 12.0
 offset_right = 720.0
 offset_bottom = 160.0
 theme_override_font_sizes/font_size = 18
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2097451782]
 environment = SubResource("Environment_h2m14")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=373752049]
 transform = Transform3D(0.819152, -0.573576, 0, 0.242404, 0.346189, -0.906308, 0.519837, 0.742404, 0.422618, 0, 0, 0)
 light_energy = 1.35
-shadow_enabled = false

@@ -220,8 +220,8 @@ public partial class GameRoot : Node3D
             float baseScale = rng.RandfRange(0.18f, 0.9f);
             var rockMesh = new SphereMesh
             {
-                Radius = 0.28f,
-                Height = 0.56f,
+                Radius = 6f,
+                Height = 12f,
                 RadialSegments = 10,
                 Rings = 8
             };
@@ -382,6 +382,7 @@ public partial class GameRoot : Node3D
         EnsureActionWithPhysicalKey("boost", Key.Shift);
         EnsureActionWithPhysicalKey("drift", Key.Ctrl);
         EnsureActionWithPhysicalKey("fire_missile", Key.Space);
+        EnsureActionWithPhysicalKey("fire_primary", Key.Q);
         EnsureActionWithMouseButton("fire_primary", MouseButton.Left);
     }
 
