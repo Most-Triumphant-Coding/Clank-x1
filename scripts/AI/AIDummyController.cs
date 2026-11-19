@@ -1,6 +1,6 @@
 using Godot;
 
-public partial class AIDummyController : Node3D
+public partial class AIDummyController : CharacterBody3D
 {
     [Signal]
     public delegate void DestroyedEventHandler(AIDummyController dummy);
@@ -24,6 +24,12 @@ public partial class AIDummyController : Node3D
     public override void _Ready()
     {
         Health = MaxHealth;
+        CollisionLayer = 2;
+
+        AddChild(new CollisionShape3D
+        {
+            Shape = new SphereShape3D { Radius = 0.8f }
+        });
 
         OrbitRadiusMeters = new Vector2(GlobalPosition.X, GlobalPosition.Z).Length();
         if (OrbitRadiusMeters < 1.0f)
@@ -35,7 +41,7 @@ public partial class AIDummyController : Node3D
         GlobalPosition = new Vector3(GlobalPosition.X, HoverHeightMeters, GlobalPosition.Z);
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (!IsAlive)
         {

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Clank-x1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+153ad030d1334d1e037892fda63516ee156e9cc6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d32787b54834f51542f3770388993acc972706b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("Clank-x1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Clank-x1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

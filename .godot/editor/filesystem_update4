@@ -1,4 +1,3 @@
-res://Main.tscn
 res://scripts/UI/HudController.cs
 res://scripts/Combat/CombatLoadoutController.cs
 res://scripts/Player/PlayerHoverBikeController.cs

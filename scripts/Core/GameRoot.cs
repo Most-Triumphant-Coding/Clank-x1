@@ -35,7 +35,6 @@ public partial class GameRoot : Node3D
         _player = GetNode<PlayerHoverBikeController>("World/Player1");
         _combat = GetNode<CombatLoadoutController>("World/Player1/Combat");
 
-        _combat.PrimaryFired += OnPrimaryFired;
         _combat.MissileFired += OnMissileFired;
         _player.PlayerDestroyed += OnPlayerDestroyed;
 
@@ -156,6 +155,27 @@ public partial class GameRoot : Node3D
         };
 
         parent.AddChild(wall);
+        AddObstacleCollider(wall);
+    }
+
+    private static void AddObstacleCollider(MeshInstance3D obstacle)
+    {
+        if (obstacle.Mesh == null)
+        {
+            return;
+        }
+
+        Vector3 scale = obstacle.GlobalBasis.Scale;
+        Vector3[] points = obstacle.Mesh.GetFaces();
+        for (int index = 0; index < points.Length; index++)
+        {
+            points[index] *= scale;
+        }
+
+        var body = new StaticBody3D { Name = $"{obstacle.Name}Collider" };
+        obstacle.GetParent().AddChild(body);
+        body.GlobalTransform = new Transform3D(obstacle.GlobalBasis.Orthonormalized(), obstacle.GlobalPosition);
+        body.AddChild(new CollisionShape3D { Shape = new ConvexPolygonShape3D { Points = points } });
     }
 
     private void RemoveLegacySphereNodes()
@@ -199,6 +219,18 @@ public partial class GameRoot : Node3D
 
     private void SpawnGroundRocks()
     {
+        Node3D fallback = _world.GetNodeOrNull<Node3D>("GroundRocksFallback");
+        if (fallback != null)
+        {
+            foreach (Node child in fallback.GetChildren())
+            {
+                if (child is MeshInstance3D rock)
+                {
+                    AddObstacleCollider(rock);
+                }
+            }
+        }
+
         if (_world.GetNodeOrNull<Node3D>("GroundRocks") != null)
         {
             return;
@@ -253,6 +285,7 @@ public partial class GameRoot : Node3D
                 new Vector3(x, y, z));
 
             rocksRoot.AddChild(rock);
+            AddObstacleCollider(rock);
         }
     }
 
@@ -278,12 +311,6 @@ public partial class GameRoot : Node3D
         {
             _player.ApplyDamage(damageThisFrame);
         }
-    }
-
-    private void OnPrimaryFired(int remainingInMagazine, float damage, float effectiveRange)
-    {
-        AIDummyController? target = FindBestTarget(effectiveRange, 0.9659f);
-        target?.ApplyDamage(damage);
     }
 
     private void OnMissileFired(int remainingMissiles, float damage, float blastRadius)

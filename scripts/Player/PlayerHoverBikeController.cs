@@ -1,17 +1,16 @@
 using Godot;
+using System.Collections.Generic;
 
-public partial class PlayerHoverBikeController : Node3D
+public partial class PlayerHoverBikeController : CharacterBody3D
 {
     private const string FirePrimaryAction = "fire_primary";
     private const string FireMissileAction = "fire_missile";
-    private const float LaserSpawnForwardOffset = 1.35f;
+    private const float LaserSpawnForwardOffset = 2.15f;
     private const float LaserSpawnHeightOffset = 0.2f;
+    private const float CollisionDamage = 50.0f;
 
     [Export]
     public float HoverHeightMeters { get; set; } = 1.8f;
-
-    [Export]
-    public float WorldHalfExtentMeters { get; set; } = 430.0f;
 
     [Export]
     public float TurnRateDegreesPerSecond { get; set; } = 35.0f;
@@ -38,7 +37,6 @@ public partial class PlayerHoverBikeController : Node3D
     public delegate void PlayerDestroyedEventHandler();
 
     public float Health { get; private set; } = 200.0f;
-    public float Armor { get; private set; } = 100.0f;
     public float CurrentSpeed => _forwardSpeed;
     public bool IsAlive { get; private set; } = true;
     public Vector3 ViewOrigin => _camera?.GlobalPosition ?? GlobalPosition;
@@ -49,7 +47,8 @@ public partial class PlayerHoverBikeController : Node3D
     private Camera3D _camera = default!;
     private CombatLoadoutController _combat = default!;
     private float _forwardSpeed;
-    private float _maxArmor;
+    private readonly HashSet<ulong> _obstacleContacts = new();
+    private readonly BoxShape3D _contactShape = new() { Size = new Vector3(1.3f, 0.55f, 2.3f) };
 
     public override void _Ready()
     {
@@ -66,18 +65,13 @@ public partial class PlayerHoverBikeController : Node3D
         var starterLoadout = BikeLoadout.CreateStarter();
         _combat.Configure(starterLoadout);
 
-        _maxArmor = starterLoadout.FrontArmor.Durability
-            + starterLoadout.LeftArmor.Durability
-            + starterLoadout.RightArmor.Durability
-            + starterLoadout.RearArmor.Durability;
-        Armor = _maxArmor;
         Health = MaxHealth;
         _forwardSpeed = ForwardSpeedUnitsPerSecond;
 
         SetProcess(true);
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (!IsAlive)
         {
@@ -89,7 +83,10 @@ public partial class PlayerHoverBikeController : Node3D
 
         RotateOnPlane(turnInput, dt);
         UpdateSpeeds(dt);
-        MoveOnPlane(dt);
+        if (MoveOnPlane(dt))
+        {
+            return;
+        }
         HandleCombatInput();
     }
 
@@ -130,7 +127,7 @@ public partial class PlayerHoverBikeController : Node3D
 
         _headMesh.Mesh = headMesh;
         _headMesh.MaterialOverride = headMaterial;
-        _headMesh.Position = new Vector3(0.0f, -0.2f, 0.0f);
+        _headMesh.Position = Vector3.Zero;
     }
 
     private void RotateOnPlane(float turnInput, float dt)
@@ -153,14 +150,93 @@ public partial class PlayerHoverBikeController : Node3D
         _forwardSpeed = ForwardSpeedUnitsPerSecond;
     }
 
-    private void MoveOnPlane(float dt)
+    private bool MoveOnPlane(float dt)
     {
         Vector3 move = -GlobalTransform.Basis.Z * _forwardSpeed * dt;
-        Vector3 nextPos = GlobalPosition + move;
-        nextPos.X = Mathf.Clamp(nextPos.X, -WorldHalfExtentMeters, WorldHalfExtentMeters);
-        nextPos.Z = Mathf.Clamp(nextPos.Z, -WorldHalfExtentMeters, WorldHalfExtentMeters);
-        nextPos.Y = HoverHeightMeters;
-        GlobalPosition = nextPos;
+        KinematicCollision3D collision = MoveAndCollide(move);
+        var contacts = new Dictionary<ulong, StaticBody3D>();
+        if (collision?.GetCollider() is StaticBody3D collider)
+        {
+            contacts[collider.GetInstanceId()] = collider;
+        }
+
+        var query = new PhysicsShapeQueryParameters3D
+        {
+            Shape = _contactShape,
+            Transform = GlobalTransform,
+            CollisionMask = CollisionMask,
+            Exclude = new Godot.Collections.Array<Rid> { GetRid() }
+        };
+
+        foreach (Godot.Collections.Dictionary result in GetWorld3D().DirectSpaceState.IntersectShape(query, 512))
+        {
+            if (result["collider"].AsGodotObject() is StaticBody3D obstacle)
+            {
+                contacts[obstacle.GetInstanceId()] = obstacle;
+            }
+        }
+
+        foreach (KeyValuePair<ulong, StaticBody3D> contact in contacts)
+        {
+            if (!_obstacleContacts.Contains(contact.Key))
+            {
+                Vector3 impactPoint;
+                if (collision?.GetCollider() is StaticBody3D hit && hit.GetInstanceId() == contact.Key)
+                {
+                    impactPoint = collision.GetPosition();
+                }
+                else
+                {
+                    var excludedBodies = new Godot.Collections.Array<Rid> { GetRid() };
+                    foreach (KeyValuePair<ulong, StaticBody3D> other in contacts)
+                    {
+                        if (other.Key != contact.Key)
+                        {
+                            excludedBodies.Add(other.Value.GetRid());
+                        }
+                    }
+
+                    query.Exclude = excludedBodies;
+                    Godot.Collections.Dictionary restInfo = GetWorld3D().DirectSpaceState.GetRestInfo(query);
+                    impactPoint = restInfo.ContainsKey("point")
+                        ? restInfo["point"].AsVector3()
+                        : GlobalPosition;
+                }
+
+                SpawnImpactFlash(impactPoint);
+                bool destroyed = Health <= CollisionDamage;
+                ApplyDamage(CollisionDamage);
+                if (destroyed)
+                {
+                    return true;
+                }
+            }
+        }
+
+        _obstacleContacts.Clear();
+        _obstacleContacts.UnionWith(contacts.Keys);
+        return false;
+    }
+
+    private void SpawnImpactFlash(Vector3 position)
+    {
+        var flash = new MeshInstance3D
+        {
+            Mesh = new SphereMesh { Radius = 1.4f, Height = 2.8f, RadialSegments = 12, Rings = 6 },
+            MaterialOverride = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(1.0f, 1.0f, 1.0f, 0.5f),
+                Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded
+            },
+            CastShadow = GeometryInstance3D.ShadowCastingSetting.Off
+        };
+
+        GetTree().CurrentScene.AddChild(flash);
+        flash.GlobalPosition = position;
+        Tween tween = GetTree().CreateTween();
+        tween.TweenProperty(flash, "scale", Vector3.Zero, 0.18);
+        tween.TweenCallback(Callable.From(flash.QueueFree));
     }
 
     private void HandleCombatInput()
@@ -201,19 +277,7 @@ public partial class PlayerHoverBikeController : Node3D
             return;
         }
 
-        float damageRemaining = rawDamage;
-
-        if (Armor > 0.0f)
-        {
-            float armorAbsorb = Mathf.Min(Armor, damageRemaining * 0.7f);
-            Armor -= armorAbsorb;
-            damageRemaining -= armorAbsorb;
-        }
-
-        if (damageRemaining > 0.0f)
-        {
-            Health = Mathf.Max(0.0f, Health - damageRemaining);
-        }
+        Health = Mathf.Max(0.0f, Health - rawDamage);
 
         if (Health <= 0.0f)
         {
@@ -231,7 +295,7 @@ public partial class PlayerHoverBikeController : Node3D
 
         _forwardSpeed = ForwardSpeedUnitsPerSecond;
         Health = MaxHealth;
-        Armor = _maxArmor;
         IsAlive = true;
+        _obstacleContacts.Clear();
     }
 }
